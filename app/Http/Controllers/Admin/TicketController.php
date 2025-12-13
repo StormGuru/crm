@@ -8,10 +8,38 @@ use App\Models\Ticket;
 
 class TicketController extends Controller
 {
-      public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::with('customer')->latest()->get();  
-        return view('admin.tickets.index', compact('tickets'));
+      $query = Ticket::with('customer');
+
+    $query->when($request->status, fn ($q) =>
+        $q->where('status', $request->status)
+    );
+
+    $query->when($request->date, fn ($q) =>
+        $q->whereDate('created_at', $request->date)
+    );
+
+    $query->when(
+        $request->email,
+        fn ($q) =>
+            $q->whereHas('customer', fn ($c) =>
+                $c->where('email', 'like', "%{$request->email}%")
+            )
+    );
+
+    $query->when(
+        $request->phone,
+        fn ($q) =>
+            $q->whereHas('customer', fn ($c) =>
+                $c->where('phone', 'like', "%{$request->phone}%")
+            )
+    );
+
+    $tickets = $query->latest()->get();
+
+    return view('admin.tickets.index', compact('tickets'));
+    
     }
 
    
@@ -33,5 +61,5 @@ class TicketController extends Controller
 
     return redirect()->back()->with('success', 'Статус обновлён');
   }
-  
+
 }

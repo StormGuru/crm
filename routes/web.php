@@ -9,7 +9,8 @@ Route::get('/', function () {
 });
 
 Route::get('/widget', [WidgetController::class, 'index']);
-Route::get('/admin/tickets', [TicketController::class, 'index']);
+Route::get('/admin/tickets', [TicketController::class, 'index'])
+     ->name('admin.tickets.index');;
 Route::get('/admin/tickets/{ticket}', [TicketController::class, 'show'])
     ->name('admin.tickets.show');
 Route::patch('/admin/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])

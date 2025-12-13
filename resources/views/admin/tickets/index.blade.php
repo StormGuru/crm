@@ -8,6 +8,28 @@
 
 <h1>Заявки</h1>
 
+<h3>Фильтры</h3>
+<div>
+  <form method="GET" action="{{ route('admin.tickets.index') }}">
+    <input type="text" name="email" placeholder="Email"
+           value="{{ request('email') }}">
+
+    <input type="text" name="phone" placeholder="Телефон"
+           value="{{ request('phone') }}">
+
+    <select name="status">
+        <option value="">Все статусы</option>
+        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>Новый</option>
+        <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>В работе</option>
+        <option value="processed" {{ request('status') == 'processed' ? 'selected' : '' }}>Обработан</option>
+    </select>
+
+    <input type="date" name="date" value="{{ request('date') }}">
+
+    <button type="submit">Фильтровать</button>
+  </form>
+</div>
+
 <table border="1" cellpadding="5">
     <thead>
         <tr>
