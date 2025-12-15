@@ -5,41 +5,25 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
+use App\Http\Requests\UpdateTicketStatusRequest;
+use App\Services\TicketService;
+use App\Enums\TicketStatus;
 
 class TicketController extends Controller
 {
+
+    public function __construct(TicketService $ticketService)
+    {
+      $this->ticketService = $ticketService;
+    }
+
     public function index(Request $request)
     {
-      $query = Ticket::with('customer');
+      
+       $tickets = $this->ticketService->getFilteredTickets($request);
 
-    $query->when($request->status, fn ($q) =>
-        $q->where('status', $request->status)
-    );
+       return view('admin.tickets.index', compact('tickets'));
 
-    $query->when($request->date, fn ($q) =>
-        $q->whereDate('created_at', $request->date)
-    );
-
-    $query->when(
-        $request->email,
-        fn ($q) =>
-            $q->whereHas('customer', fn ($c) =>
-                $c->where('email', 'like', "%{$request->email}%")
-            )
-    );
-
-    $query->when(
-        $request->phone,
-        fn ($q) =>
-            $q->whereHas('customer', fn ($c) =>
-                $c->where('phone', 'like', "%{$request->phone}%")
-            )
-    );
-
-    $tickets = $query->latest()->get();
-
-    return view('admin.tickets.index', compact('tickets'));
-    
     }
 
    
@@ -50,16 +34,24 @@ class TicketController extends Controller
     }
 
    
-    public function updateStatus(Request $request, Ticket $ticket)
-  {
-    $request->validate([
-        'status' => 'required|string',
-    ]);
 
-    $ticket->status = $request->status;
-    $ticket->save();
+   public function updateStatus(
+        UpdateTicketStatusRequest $request,
+        Ticket $ticket
+    ) {
+       //dd($request->status);
+        
+       $statusEnum = TicketStatus::from($request->status);
+      
+        $this->ticketService->updateStatus(
+            $ticket,
+            $statusEnum
+        );
 
-    return redirect()->back()->with('success', 'Статус обновлён');
-  }
+        return redirect()
+            ->back()
+            ->with('success', 'Статус обновлён');
+    }
+
 
 }

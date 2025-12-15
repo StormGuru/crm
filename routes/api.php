@@ -10,4 +10,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/tickets', [TicketController::class, 'store']);
-Route::get('/tickets/statistics', TicketStatisticsController::class);
+Route::middleware(['auth:sanctum', 'role:admin|manager'])->get('/tickets/statistics', TicketStatisticsController::class);

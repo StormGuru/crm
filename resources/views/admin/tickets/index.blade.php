@@ -21,7 +21,7 @@
         <option value="">Все статусы</option>
         <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>Новый</option>
         <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>В работе</option>
-        <option value="processed" {{ request('status') == 'processed' ? 'selected' : '' }}>Обработан</option>
+        <option value="processed" {{ request('status') == 'done' ? 'selected' : '' }}>Обработан</option>
     </select>
 
     <input type="date" name="date" value="{{ request('date') }}">

@@ -28,6 +28,8 @@ class StoreTicketRequest extends FormRequest
         'phone'       => 'required|string',
         'subject'     => 'required|string|max:255',
         'text'        => 'required|string',
+        'files'       => 'nullable|array',
+        'files.*'     => 'file|max:10240',
         ];
     }
 }

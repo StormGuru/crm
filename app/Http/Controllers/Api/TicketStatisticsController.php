@@ -15,8 +15,8 @@ class TicketStatisticsController extends Controller
 
     public function __invoke()
     {
-        return new TicketStatisticsResource(
-            $this->service->get()
-        );
+        $data = $this->service->get();
+
+        return new TicketStatisticsResource($data);
     }
 }

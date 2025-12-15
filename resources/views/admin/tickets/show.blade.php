@@ -40,11 +40,27 @@
     <select name="status">
         <option value="new" {{ $ticket->status == 'new' ? 'selected' : '' }}>Новый</option>
         <option value="in_progress" {{ $ticket->status == 'in_progress' ? 'selected' : '' }}>В работе</option>
-        <option value="processed" {{ $ticket->status == 'processed' ? 'selected' : '' }}>Обработан</option>
+        <option value="done" {{ $ticket->status == 'done' ? 'selected' : '' }}>Обработан</option>
     </select>
 
     <button type="submit">Сохранить</button>
 </form>
+
+    <h3>Файлы</h3>
+
+       @if($ticket->getMedia('attachments')->isEmpty())
+       <p>Файлы не прикреплены</p>
+        @else
+         <ul>
+          @foreach($ticket->getMedia('attachments') as $file)
+            <li>
+                <a href="{{ $file->getUrl() }}" target="_blank">
+                    {{ $file->name }}
+                </a>
+            </li>
+         @endforeach
+         </ul>
+       @endif
 
 
 </body>
