@@ -39,8 +39,7 @@ class TicketController extends Controller
         UpdateTicketStatusRequest $request,
         Ticket $ticket
     ) {
-       //dd($request->status);
-        
+       
        $statusEnum = TicketStatus::from($request->status);
       
         $this->ticketService->updateStatus(
